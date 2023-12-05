@@ -1,0 +1,5 @@
+pnet_path = "/home/pi/FaceIdentifyService/FaceIdentify_TFlite/facenet_tflite_model/pnet_20180402-114759.tflite"
+rnet_path = "/home/pi/FaceIdentifyService/FaceIdentify_TFlite/facenet_tflite_model/rnet_20180402-114759.tflite"
+onet_path = "/home/pi/FaceIdentifyService/FaceIdentify_TFlite/facenet_tflite_model/onet_20180402-114759.tflite"
+model_path = "/home/pi/FaceIdentifyService/FaceIdentify_TFlite/facenet_tflite_model/embedding_20180402-114759.tflite"
+identify_path = "/home/pi/FaceIdentifyService/FaceIdentify_TFlite/NhiThuy_identify.tflite"
