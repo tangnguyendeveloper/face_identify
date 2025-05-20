@@ -26,6 +26,13 @@ file(GLOB_RECURSE HEADERS src/*.hpp src/*.h)
 # Find OpenCV
 find_package(OpenCV REQUIRED)
 
+# Find Eigen3
+find_path(EIGEN3_INCLUDE_DIR Eigen/Dense HINTS /usr/local/include/eigen3)
+
+if(NOT EIGEN3_INCLUDE_DIR)
+    message(FATAL_ERROR "Could not find Eigen3")
+endif()
+
 # Find TensorFlow Lite
 find_library(TFLITE_LIB tensorflowlite HINTS /usr/local/lib REQUIRED)
 
@@ -37,6 +44,7 @@ target_include_directories(FaceIdentify PRIVATE
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/app
     ${OpenCV_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIR}
     /usr/local/include             # FlatBuffers, Abseil nếu cài ở đây
     /usr/local/include/tensorflow # tensorflow/lite/...
 )

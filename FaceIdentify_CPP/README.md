@@ -2,10 +2,12 @@
 
 ## Author
 **Tang Nguyen-Tan**  
+
 **Email:** tangnt.1289@gmail.com  
 
 ## Environment
 **Ubuntu 24.04 LTS**
+
 **Python 3.12** (for building TensorFlow processes)
 
 ## Update and Install Prerequisites
@@ -169,8 +171,28 @@ cd ..
 
     ```
 
+## Build this project
+
+```sh
+
+git clone https://github.com/tangnguyendeveloper/face_identify.git
+cd face_identify/FaceIdentify_CPP
+cmake -B build
+cmake --build build -j$(nproc)
+
+# Change the etc/camera_and_models.conf if you need
+# run project
+./build/FaceIdentify etc/camera_and_models.conf
+
+```
+
+
+
 References:
     [OpenCV Documentation](https://docs.opencv.org/4.x/d9/df8/tutorial_root.html).
+
     [Build LiteRT](https://ai.google.dev/edge/litert/build/arm)
+
     [Google Facenet implementation for live face recognition in C++ using TensorFlow, OpenCV, and dlib](https://github.com/nwesem/facenet_cpp_tensorflow/tree/master)
+
     [C++ MTCNN inferencing with only OpenCV](https://github.com/egcode/mtcnn-opencv)
