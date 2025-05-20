@@ -189,10 +189,10 @@ cmake --build build -j$(nproc)
 
 
 References:
-    [OpenCV Documentation](https://docs.opencv.org/4.x/d9/df8/tutorial_root.html).
+[OpenCV Documentation](https://docs.opencv.org/4.x/d9/df8/tutorial_root.html)
 
-    [Build LiteRT](https://ai.google.dev/edge/litert/build/arm)
+[Build LiteRT](https://ai.google.dev/edge/litert/build/arm)
 
-    [Google Facenet implementation for live face recognition in C++ using TensorFlow, OpenCV, and dlib](https://github.com/nwesem/facenet_cpp_tensorflow/tree/master)
+[Google Facenet implementation for live face recognition in C++ using TensorFlow, OpenCV, and dlib](https://github.com/nwesem/facenet_cpp_tensorflow/tree/master)
 
-    [C++ MTCNN inferencing with only OpenCV](https://github.com/egcode/mtcnn-opencv)
+[C++ MTCNN inferencing with only OpenCV](https://github.com/egcode/mtcnn-opencv)
