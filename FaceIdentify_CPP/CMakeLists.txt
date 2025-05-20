@@ -26,6 +26,9 @@ file(GLOB_RECURSE HEADERS src/*.hpp src/*.h)
 # Find OpenCV
 find_package(OpenCV REQUIRED)
 
+# find Boost
+find_package( Boost REQUIRED COMPONENTS system filesystem timer thread )
+
 # Find Eigen3
 find_path(EIGEN3_INCLUDE_DIR Eigen/Dense HINTS /usr/local/include/eigen3)
 
@@ -44,10 +47,11 @@ target_include_directories(FaceIdentify PRIVATE
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/app
     ${OpenCV_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
     ${EIGEN3_INCLUDE_DIR}
     /usr/local/include             # FlatBuffers, Abseil nếu cài ở đây
     /usr/local/include/tensorflow # tensorflow/lite/...
 )
 
 # Link OpenCV libraries
-target_link_libraries(FaceIdentify PRIVATE ${OpenCV_LIBS} ${TFLITE_LIB})
+target_link_libraries(FaceIdentify PRIVATE ${OpenCV_LIBS} ${Boost_LIBRARIES} ${TFLITE_LIB} pthread)

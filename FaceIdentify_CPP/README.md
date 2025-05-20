@@ -189,6 +189,7 @@ cmake --build build -j$(nproc)
 
 
 References:
+
 [OpenCV Documentation](https://docs.opencv.org/4.x/d9/df8/tutorial_root.html)
 
 [Build LiteRT](https://ai.google.dev/edge/litert/build/arm)

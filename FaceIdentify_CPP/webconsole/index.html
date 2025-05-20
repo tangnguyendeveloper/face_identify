@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Console</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid #000;
+            margin-top: 10px;
+        }
+    </style>
+
+    <div style="margin-bottom: 10px;">
+        <button id="show_raw_btn">Show Raw</button>
+        <button id="show_processed_btn">Show Processed</button>
+    </div>
+    <canvas id="raw_canvas"></canvas>
+    <canvas id="processed_canvas" style="display:none;"></canvas>
+
+<script>
+document.getElementById('show_raw_btn').onclick = function() {
+    document.getElementById('raw_canvas').style.display = '';
+    document.getElementById('processed_canvas').style.display = 'none';
+};
+document.getElementById('show_processed_btn').onclick = function() {
+    document.getElementById('raw_canvas').style.display = 'none';
+    document.getElementById('processed_canvas').style.display = '';
+};
+</script>
+
+<script>
+const ws = new WebSocket("ws://localhost:9002");
+ws.binaryType = "arraybuffer";
+
+const raw_canvas = document.getElementById("raw_canvas");
+const ctx_raw_canvas = raw_canvas.getContext("2d");
+const processed_canvas = document.getElementById("processed_canvas");
+const ctx_processed_canvas = processed_canvas.getContext("2d");
+
+ws.onmessage = (event) => {
+    // server sends JSON with type and image as base64 string
+    // { type: "raw"|"processed", image: "<base64 string>" }
+    try {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const msg = JSON.parse(reader.result);
+            const img = new Image();
+            img.onload = () => {
+                if (msg.type === "raw") {
+                    raw_canvas.width = img.width;
+                    raw_canvas.height = img.height;
+                    ctx_raw_canvas.drawImage(img, 0, 0);
+                } else if (msg.type === "processed") {
+                    processed_canvas.width = img.width;
+                    processed_canvas.height = img.height;
+                    ctx_processed_canvas.drawImage(img, 0, 0);
+                }
+            };
+            img.src = "data:image/jpeg;base64," + msg.image;
+        };
+        reader.readAsText(new Blob([event.data]));
+    } catch (e) {
+        // If not JSON, fallback to old behavior (raw image)
+        const blob = new Blob([event.data], { type: 'image/jpeg' });
+        const img = new Image();
+        img.onload = () => {
+            raw_canvas.width = img.width;
+            raw_canvas.height = img.height;
+            ctx_raw_canvas.drawImage(img, 0, 0);
+        };
+        img.src = URL.createObjectURL(blob);
+    }
+};
+</script>
+
+</html>
