@@ -109,6 +109,7 @@ cd ..
     wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.zip
     unzip eigen-3.4.0.zip && cd eigen-3.4.0
     mkdir build && cd build
+    cmake ..
     make -j$(nproc)
     sudo make install
     cd ../../ && rm -rf eigen*
@@ -180,12 +181,44 @@ cd face_identify/FaceIdentify_CPP
 cmake -B build
 cmake --build build -j$(nproc)
 
-# Change the etc/camera_and_models.conf if you need
-# run project
-./build/FaceIdentify etc/camera_and_models.conf
-
 ```
 
+## Run project
+### Change the etc/camera_and_models.conf if you need
+
+```sh
+
+./build/FaceIdentify --help
+FaceIdentify - Face Detection and Embedding Application
+
+Usage: FaceIdentify --config <config_file> [--database <database_file>]
+  --config, -c <config_file>    Path to the configuration file (required)
+  --database, -d <db_file>      Path to the embedding database file (optional)
+  --websocket_host, -w <host>   WebSocket server host (default: localhost)
+  --websocket_port, -p <port>   WebSocket server port (default: 9002)
+  --help, -h                    Show this help message
+
+
+# Web UI
+python3 -m http.server  -d webconsole/
+
+# Core App
+./build/FaceIdentify --config etc/camera_and_models.conf
+
+# 2 in 1
+python3 -m http.server -d webconsole/ & ./build/FaceIdentify --config etc/camera_and_models.conf
+
+# OR
+python3 -m http.server -d webconsole/ & 
+echo "Web UI PID: $!"
+./build/FaceIdentify --config etc/camera_and_models.conf &
+echo "Core App PID: $!"
+
+# Kill
+kill -9 <PID>
+
+
+```
 
 
 References:

@@ -27,7 +27,7 @@ file(GLOB_RECURSE HEADERS src/*.hpp src/*.h)
 find_package(OpenCV REQUIRED)
 
 # find Boost
-find_package( Boost REQUIRED COMPONENTS system filesystem timer thread )
+find_package( Boost REQUIRED COMPONENTS system filesystem timer thread json)
 
 # Find Eigen3
 find_path(EIGEN3_INCLUDE_DIR Eigen/Dense HINTS /usr/local/include/eigen3)
@@ -55,3 +55,4 @@ target_include_directories(FaceIdentify PRIVATE
 
 # Link OpenCV libraries
 target_link_libraries(FaceIdentify PRIVATE ${OpenCV_LIBS} ${Boost_LIBRARIES} ${TFLITE_LIB} pthread)
+

@@ -23,6 +23,9 @@ const TfLiteTensor* FaceEmbedding::embedding(const cv::Mat &img, const cv::Rect 
     cv::Mat face = cropImage(img, rect);
 
     if (face.empty()) return nullptr;
+    
+    if (face.rows <= 0 || face.cols <= 0) return nullptr;
+    
     if (face.channels() == 3) {
         cv::cvtColor(face, face, cv::COLOR_BGR2RGB);
     } else if (face.channels() == 4) {
@@ -31,7 +34,11 @@ const TfLiteTensor* FaceEmbedding::embedding(const cv::Mat &img, const cv::Rect 
 
     cv::resize(face, face, cv::Size(this->_input_shape, this->_input_shape), 0, 0, cv::INTER_LINEAR);
 
-    face.convertTo(face, CV_32FC3, SCALE_FACTOR, -1.0); // Normalize to [-1, 1]
+    if (face.empty() || face.type() != CV_8UC3) return nullptr;
+    
+    face.convertTo(face, CV_32FC3, SCALE_FACTOR, -1.0);
+    
+    if (face.empty() || face.type() != CV_32FC3) return nullptr;
 
     // Resize input tensor if needed
     TfLiteTensor *input = this->_interpreter->tensor(this->_interpreter->inputs()[0]);

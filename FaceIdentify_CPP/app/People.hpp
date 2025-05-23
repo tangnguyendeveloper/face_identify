@@ -15,6 +15,35 @@ public:
     People(int id, const std::string& name, int old)
         : id(id), name(name), old(old) {}
 
+    People(const People& other) // Copy constructor
+        : id(other.id), name(other.name), old(other.old) {}
+    
+    People& operator=(const People& other) { // Copy assignment operator
+        if (this != &other) {
+            id = other.id;
+            name = other.name;
+            old = other.old;
+        }
+        return *this;
+    }
+
+    People(People&& other) noexcept // Move constructor
+        : id(other.id), name(std::move(other.name)), old(other.old) {
+        other.id = 0;
+        other.old = 0;
+    }
+
+    People& operator=(People&& other) noexcept { // Move assignment operator
+        if (this != &other) {
+            id = other.id;
+            name = std::move(other.name);
+            old = other.old;
+            other.id = 0;
+            other.old = 0;
+        }
+        return *this;
+    }
+
     // Getters
     int getId() const { return id; }
     std::string getName() const { return name; }
@@ -25,7 +54,7 @@ public:
     void setName(const std::string& newName) { name = newName; }
     void setOld(int newOld) { old = newOld; }
 
-    // So sánh
+    // equality operator
     bool operator==(const People& other) const {
         return id == other.id && name == other.name && old == other.old;
     }
