@@ -209,6 +209,21 @@ int main(int argc, char *argv[]) {
                     // insert into database
                     if (embedding_db.insert(mean_embedding.transpose(), *new_person_ptr)) {
                         logger.log(Logging::LogStatus::INFO, "Inserted new person into the database: " + new_person_ptr->toJsonString());
+
+                        // save database
+                        
+                        if (!database_file.empty() && embedding_db.size() > 0) {
+                            try {
+                                if (embedding_db.store(database_file)) {
+                                    logger.log(Logging::LogStatus::INFO, "Database saved successfully.");
+                                } else {
+                                    logger.log(Logging::LogStatus::WARNING, "Failed to save database.");
+                                }
+                            } catch (const std::exception& e) {
+                                logger.log(Logging::LogStatus::ERROR, "Error saving database: " + std::string(e.what()));
+                            }
+                        }
+
                     } else {
                         logger.log(Logging::LogStatus::ERROR, "Failed to insert new person into the database.");
                     }
@@ -231,19 +246,6 @@ int main(int argc, char *argv[]) {
         logger.log(Logging::LogStatus::ERROR, e.what());
         running = false;
         return 1;
-    }
-
-    // Save database before exit
-    if (!database_file.empty() && embedding_db.size() > 0) {
-        try {
-            if (embedding_db.store(database_file)) {
-                logger.log(Logging::LogStatus::INFO, "Database saved successfully.");
-            } else {
-                logger.log(Logging::LogStatus::WARNING, "Failed to save database.");
-            }
-        } catch (const std::exception& e) {
-            logger.log(Logging::LogStatus::ERROR, "Error saving database: " + std::string(e.what()));
-        }
     }
 
     running = false;

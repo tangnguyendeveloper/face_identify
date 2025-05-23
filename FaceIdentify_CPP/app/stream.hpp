@@ -282,6 +282,7 @@ void websocketServerThread(
                         client_connected = false;
                     }
                     client_cv.notify_all();
+                    
                 }
             }, std::move(socket)).detach();
         }
