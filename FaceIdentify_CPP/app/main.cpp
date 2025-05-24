@@ -248,6 +248,19 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    // save database before exiting
+    if (!database_file.empty() && embedding_db.size() > 0) {
+        try {
+            if (embedding_db.store(database_file)) {
+                logger.log(Logging::LogStatus::INFO, "Database saved successfully.");
+            } else {
+                logger.log(Logging::LogStatus::WARNING, "Failed to save database.");
+            }
+        } catch (const std::exception& e) {
+            logger.log(Logging::LogStatus::ERROR, "Error saving database: " + std::string(e.what()));
+        }
+    }
+
     running = false;
     return 0;
 }

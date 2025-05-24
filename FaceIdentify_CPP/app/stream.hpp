@@ -121,17 +121,23 @@ void websocketServerThread(
                     return !client_connected; 
                 });
                 continue;
+
             }
 
             tcp::socket socket{ioc};
             boost::system::error_code ec;
 
-            acceptor.accept(socket, ec);
+            if (running) acceptor.accept(socket, ec);
             if (ec) {
                 logger.log(Logging::LogStatus::ERROR, "Accept error: " + ec.message());
                 continue;
             }
             logger.log(Logging::LogStatus::INFO, "New WebSocket client connected.");
+
+            {
+                std::lock_guard<std::mutex> lock(client_mutex);
+                client_connected = true;
+            }
 
             std::thread([
                             &running, &is_capture, &is_process, &frame_queue_mutex, &frame_queue, &processed_frame_queue_mutex, 
@@ -142,14 +148,19 @@ void websocketServerThread(
                     websocket::stream<tcp::socket> ws{std::move(sock)};
                     ws.accept();
 
+                    bool is_receiving = false;
+                    
+
                     while (running) {
                         
                         // Read incoming messages
-
-                        std::thread([&ws, &running, &logger, &is_capture, &is_process, &capture, &process, 
+                        if (!is_receiving)
+                        std::thread([&ws, &running, &logger, &is_capture, &is_process, &capture, &process, &is_receiving,
                                     &new_person_mutex, &new_person_ptr, &client_connected, &client_cv, &client_mutex]() {
                             beast::flat_buffer buffer;
                             boost::system::error_code ec;
+                            is_receiving = true;
+                            
                             while (running) {
                                 ws.read(buffer, ec);
                                 
@@ -207,6 +218,7 @@ void websocketServerThread(
                                             logger.log(Logging::LogStatus::WARNING, "System shutdown requested by client");
                                             // Stop all threads by setting running to false
                                             running = false;
+                                            return;
                                         }
                                     }
                                 } 
@@ -214,7 +226,7 @@ void websocketServerThread(
                             }
                         }).detach();
 
-
+                        
                         
                         beast::flat_buffer buffer;
 
@@ -282,7 +294,7 @@ void websocketServerThread(
                         client_connected = false;
                     }
                     client_cv.notify_all();
-                    
+                    return;
                 }
             }, std::move(socket)).detach();
         }
