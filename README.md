@@ -1,4 +1,4 @@
-![diagram-export-6-15-2025-4_52_58-AM](https://github.com/user-attachments/assets/f3366022-ef77-4086-99b9-c6dc9169210a)# FaceIdentify Project
+# FaceIdentify Project
 
 **Author:** Tang Nguyen-Tan  
 **Email:** tangnt.1289@gmail.com  
@@ -42,6 +42,7 @@ A C++ application for real-time face detection and embedding extraction using Te
     
 - See [FaceIdentify_CPP/README.md](FaceIdentify_CPP/README.md) for full instructions.
 
+![diagram-export-6-15-2025-4_52_58-AM](https://github.com/user-attachments/assets/f3366022-ef77-4086-99b9-c6dc9169210a)
 
 ![Demo](Video.gif)
 
